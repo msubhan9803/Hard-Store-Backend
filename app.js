@@ -9,6 +9,11 @@ var http = require("http"),
 errorhandler = require("errorhandler");
 dotenv = require("dotenv");
 
+// const swaggerUi = require("swagger-ui-express");
+// const swaggerDocument = require("./swagger.json");
+
+// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 dotenv.config();
 
 var isProduction = process.env.NODE_ENV === "production";
@@ -53,6 +58,7 @@ if (isProduction) {
 require("./models/category");
 require("./models/Brands");
 require("./models/products");
+require("./models/order");
 
 app.use(require("./routes"));
 
