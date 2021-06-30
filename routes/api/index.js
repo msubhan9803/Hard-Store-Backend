@@ -3,7 +3,7 @@ var router = require("express").Router();
 router.use("/", require("./User"));
 router.use("/category", require("./Category"));
 router.use("/brand", require("./Brands"));
-router.use("/products", require("./Products"));
+router.use("/products", require("./products"));
 router.use("/order", require("./Orders"));
 
 router.use(function (err, req, res, next) {
