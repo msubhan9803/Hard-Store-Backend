@@ -31,7 +31,7 @@ router.post("/addBrand", upload.single("brandImg"), async (req, res) => {
 
   (brand.brand_Name = req.body.brand_Name),
     (brand.slug = req.body.slug),
-    (brand.img_URL = `${process.env.API_Path}/uploads/brands/${file.filename}`),
+    (brand.img_URL = `${process.env.Image_Path}/uploads/brands/${file.filename}`),
     (brand.img_Title = file.filename);
 
   try {
@@ -72,7 +72,7 @@ router.put("/updateBrand", upload.single("brandImg"), async (req, res) => {
     var file = req.file;
     (isBrand.brand_Name = req.body.brand_Name),
       (isBrand.slug = req.body.slug),
-      (isBrand.img_URL = `${process.env.API_Path}/uploads/brands/${file.filename}`),
+      (isBrand.img_URL = `${process.env.Image_Path}/uploads/brands/${file.filename}`),
       (isBrand.img_Title = file.filename);
 
     try {

@@ -3,9 +3,7 @@ var uniqueValidator = require("mongoose-unique-validator");
 
 var CategorySchema = new mongoose.Schema(
   {
-    slug: { type: String, lowercase: true, unique: true },
     category_Name: { type: String, unique: true, lowercase: true },
-    sub_category_Name: [],
   },
   { timestamps: true }
 );

@@ -30,6 +30,7 @@ app.use(bodyParser.json());
 
 app.use(require("method-override")());
 app.use(express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "/public/uploads"));
 
 app.use(
   session({

@@ -19,8 +19,7 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 
 router.post("/addProduct", async (req, res) => {
-  console.log("in request ");
-
+  const variants = "";
   const product = new PRODUCT();
   (product.type = req.body.type),
     (product.title = req.body.title),
@@ -28,15 +27,25 @@ router.post("/addProduct", async (req, res) => {
     (product.brand = req.body.brand),
     (product.collections = req.body.collections),
     (product.category = req.body.category),
-    (product.price = req.body.price),
     (product.sale = req.body.sale),
     (product.discount = req.body.discount),
     (product.stock = req.body.stock),
     (product.new = req.body.new),
     (product.tags = req.body.tags),
-    (product.variants = req.body.variants),
-    (product.images = req.body.images);
-  console.log(product);
+    (product.Watch_Case_Shape = req.body.Watch_Case_Shape),
+    (product.Glass = req.body.Glass),
+    (product.Watch_Feature = req.body.Watch_Feature),
+    (product.Model = req.body.Model),
+    (product.Dial_Size = req.body.Dial_Size),
+    (product.Dial_Size = req.body.Dial_Size),
+    (product.Watch_Case_Size = req.body.Watch_Case_Size),
+    (product.Movement = req.body.Movement),
+    (product.Watch_Movement_Country = req.body.Watch_Movement_Country),
+    (product.Strap_Material = req.body.Strap_Material),
+    (product.water_resistance = req.body.water_resistance),
+    (product.Color_Family = req.body.Color_Family),
+    (product.variants = variants);
+  product.Warranty = req.body.Warranty;
 
   try {
     const savedProduct = await product.save();

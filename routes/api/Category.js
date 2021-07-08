@@ -5,10 +5,7 @@ var auth = require("../auth");
 
 router.post("/addCategory", async (req, res) => {
   const category = new CATEGORY();
-  (category.category_Name = req.body.category_Name),
-    (category.slug = req.body.slug);
-  category.sub_category_Name = req.body.sub_category_Name;
-
+  category.category_Name = req.body.category_Name;
   try {
     const Category = await category.save();
     if (Category) {

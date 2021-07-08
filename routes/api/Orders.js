@@ -6,7 +6,6 @@ var helper = require("./helper");
 router.post("/createOrder", async (req, res) => {
   const order = new ORDER();
   const newOrder = req.body;
-
   order.first_Name = newOrder.first_Name;
   order.last_Name = newOrder.last_Name;
   order.phone = newOrder.phone;
