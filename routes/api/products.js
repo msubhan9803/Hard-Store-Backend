@@ -3,6 +3,7 @@ var mongoose = require("mongoose");
 var PRODUCT = require("../../models/products");
 var auth = require("../auth");
 var multer = require("multer");
+var product_Service = require("./service/productServ");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -19,33 +20,33 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 
 router.post("/addProduct", async (req, res) => {
-  const variants = "";
+  const variants = await product_Service.convertToImg(req.body.variants);
+
   const product = new PRODUCT();
   (product.type = req.body.type),
     (product.title = req.body.title),
     (product.description = req.body.description),
-    (product.brand = req.body.brand),
+    (product.category_id = req.body.category_id),
+    (product.brand_id = req.body.brand_id),
     (product.collections = req.body.collections),
-    (product.category = req.body.category),
     (product.sale = req.body.sale),
-    (product.discount = req.body.discount),
-    (product.stock = req.body.stock),
     (product.new = req.body.new),
     (product.tags = req.body.tags),
     (product.Watch_Case_Shape = req.body.Watch_Case_Shape),
+    (product.Watch_Case_Size = req.body.Watch_Case_Size),
     (product.Glass = req.body.Glass),
     (product.Watch_Feature = req.body.Watch_Feature),
     (product.Model = req.body.Model),
     (product.Dial_Size = req.body.Dial_Size),
     (product.Dial_Size = req.body.Dial_Size),
-    (product.Watch_Case_Size = req.body.Watch_Case_Size),
     (product.Movement = req.body.Movement),
     (product.Watch_Movement_Country = req.body.Watch_Movement_Country),
     (product.Strap_Material = req.body.Strap_Material),
     (product.water_resistance = req.body.water_resistance),
     (product.Color_Family = req.body.Color_Family),
-    (product.variants = variants);
-  product.Warranty = req.body.Warranty;
+    (product.Warranty = req.body.Warranty);
+  product.variants = variants;
+  product.skuArray = req.body.skuArray;
 
   try {
     const savedProduct = await product.save();
@@ -58,9 +59,23 @@ router.post("/addProduct", async (req, res) => {
 });
 
 router.get("/getProducts", async (req, res) => {
-  const products = await PRODUCT.find();
-  if (!products) return res.status(200).send("products not found");
-  else return res.status(200).send(products);
+  try {
+    const products = await PRODUCT.find();
+    if (!products) return res.status(200).send("products not found");
+    return res.status(200).send(products);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+router.get("/getProductById/:id", async (req, res) => {
+  try {
+    const isProduct = await PRODUCT.findById(req.params.id);
+    if (!isProduct) return res.status(400).send("Product nor found");
+    return res.status(200).send(isProduct);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
 });
 
 router.delete("/deleteProduct", async (req, res) => {
@@ -77,6 +92,18 @@ router.delete("/deleteProduct", async (req, res) => {
   } catch (err) {
     return res.status(400).send(err);
   }
+});
+
+router.post("/productFilter", async (req, res) => {
+  PRODUCT.find(
+    { title: { $regex: req.body.query, $options: "i" } },
+    function (err, products) {
+      if (err) throw err;
+      else if (docs) {
+        return res.status(200).json({ result: products });
+      }
+    }
+  ).select("title");
 });
 
 module.exports = router;

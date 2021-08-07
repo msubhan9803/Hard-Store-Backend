@@ -5,6 +5,7 @@ var multer = require("multer");
 var path = require("path");
 var AUTH = require("../auth");
 var SUBSCRIBE = require("../../models/subscribe");
+const jwt = require("jsonwebtoken");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {

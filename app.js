@@ -22,15 +22,34 @@ var isProduction = process.env.NODE_ENV === "production";
 var app = express();
 
 app.use(cors());
+app.use(express.json({ extended: true, limit: "5MB" }));
+// app.use(express.bodyParser());
 
 // Normal express config defaults
 app.use(require("morgan")("dev"));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+// app.use(
+//   bodyParser.urlencoded({
+//     limit: "50mb",
+//     extended: true,
+//     parameterLimit: 1000000,
+//   })
+// );
+// app.use(bodyParser.json({ limit: "50mb" }));
 
 app.use(require("method-override")());
-app.use(express.static(__dirname + "/public"));
-app.use(express.static(__dirname + "/public/uploads"));
+app.use(express.static(path.join(__dirname, "public/products")));
+
+app.use(cors());
+app.use(function (req, res, next) {
+  //  res.header("Access-Control-Allow-Origin", "http://192.168.1.100:8025"); // update to match the domain you will make the request from
+  res.header("Access-Control-Expose-Headers", "cooljwt");
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  next();
+});
 
 app.use(
   session({

@@ -9,15 +9,16 @@ var orderSchema = new mongoose.Schema(
     Email: { type: String, lowercase: true },
     Country: { type: String, lowercase: true },
     City: { type: String, lowercase: true },
+    State: { type: String, lowercase: true },
+    postalCode: { type: String, lowercase: true },
     Address: { type: String, lowercase: true },
-    Paid: { type: String, lowercase: true },
-    items: [
+    products: [
       {
-        item_name: {
+        product_name: {
           type: String,
           require: true,
         },
-        item_Id: {
+        product_Id: {
           type: String,
           require: true,
         },
@@ -39,6 +40,11 @@ var orderSchema = new mongoose.Schema(
         },
       },
     ],
+
+    totalAmount: {
+      type: Number,
+      require: true,
+    },
 
     tracking_Status: {
       current_Status: {

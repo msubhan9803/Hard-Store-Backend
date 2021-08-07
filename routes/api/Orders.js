@@ -1,28 +1,32 @@
 var router = require("express").Router();
-
 var ORDER = require("../../models/order");
 var helper = require("./helper");
+var orderService = require("./service/orderServ");
 
 router.post("/createOrder", async (req, res) => {
-  const order = new ORDER();
-  const newOrder = req.body;
-  order.first_Name = newOrder.first_Name;
-  order.last_Name = newOrder.last_Name;
-  order.phone = newOrder.phone;
-  order.Email = newOrder.Email;
-  order.Country = newOrder.Country;
-  order.City = newOrder.City;
-  order.Address = newOrder.Address;
-  order.Paid = newOrder.Paid;
-  order.items = newOrder.items;
-
   try {
+    orderService.SendMailtoCustomer();
+
+    return;
+    const order = new ORDER();
+    const newOrder = req.body;
+    order.first_Name = newOrder.first_Name;
+    order.last_Name = newOrder.last_Name;
+    order.phone = newOrder.phone;
+    order.Email = newOrder.Email;
+    order.Country = newOrder.Country;
+    order.City = newOrder.City;
+    order.State = newOrder.State;
+    order.postalCode = newOrder.postalCode;
+    order.Address = newOrder.Address;
+    order.totalAmount = newOrder.totalAmount;
+    order.products = newOrder.products;
+
     const saved_Order = await order.save();
     saved_Order.tracking_Status.placed.date = new Date();
     saved_Order.tracking_Status.placed.status = "completed";
     saved_Order.tracking_Status.placed.comment = "Order Placed";
     saved_Order.tracking_Status.current_Status = "Processing";
-
     const updated_order = await saved_Order.save();
     return res.status(200).send(updated_order);
   } catch (err) {
