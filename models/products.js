@@ -7,7 +7,7 @@ var productSchema = new mongoose.Schema(
     title: { type: String, required: false },
     description: { type: String, lowercase: true, required: false },
     category_id: { type: String, required: false },
-    brand_id: { type: String, required: false },
+    brand: { type: String, required: false },
     collections: [], //  new products, tranding , on sale
     sale: { type: Boolean, required: false, default: false },
     new: { type: Boolean, required: false },
