@@ -12,8 +12,9 @@ const convertToImg = async (params) => {
           // images array
           var images = [];
           data.imagesPreview.map((img) => {
-            let base64 = img.split(";base64,").pop();
-            let path = `public/products/` + Date.now() + "product.png";
+            let base64 = img.base64.split(";base64,").pop();
+            let fileName = `${Date.now()}-${img.fileName}`;
+            let path = `public/products/` + fileName;
             fs.writeFile(
               path,
               base64,
@@ -26,7 +27,7 @@ const convertToImg = async (params) => {
                 }
               }
             );
-            images.push(path);
+            images.push(fileName);
           });
         }
 

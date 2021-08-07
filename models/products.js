@@ -6,7 +6,7 @@ var productSchema = new mongoose.Schema(
     // type: { type: String, lowercase: true, required: false }, // Men || Women
     title: { type: String, required: false },
     description: { type: String, lowercase: true, required: false },
-    category_id: { type: String, required: false },
+    // category_id: { type: String, required: false },
     brand: { type: String, required: false },
     // collections: [], //  new products, tranding , on sale
     sale: { type: Boolean, required: false, default: false },
@@ -23,15 +23,15 @@ var productSchema = new mongoose.Schema(
     // Strap_Material: { type: String },
     // water_resistance: { type: Boolean },
     // Color_Family: [],
-    Warranty: {
-      isWarranty: {
-        type: Boolean,
-        default: true,
-      },
-      warrantyPeriod: {
-        type: Number,
-      },
-    },
+    // Warranty: {
+    //   isWarranty: {
+    //     type: Boolean,
+    //     default: true,
+    //   },
+    //   warrantyPeriod: {
+    //     type: Number,
+    //   },
+    // },
     variants: [
       {
         imagesPreview: [],
