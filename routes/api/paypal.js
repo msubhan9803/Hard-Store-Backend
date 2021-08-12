@@ -14,6 +14,7 @@ var PAYPAL_API = "https://api-m.sandbox.paypal.com";
 // 1. Set up a URL to handle requests from the PayPal button
 router.post("/my-api/create-payment/", function (req, res) {
   // 2. Call /v1/payments/payment to set up the payment
+  console.log("n body");
   request.post(
     PAYPAL_API + "/v1/payments/payment",
     {
