@@ -79,7 +79,7 @@ require("./models/category");
 require("./models/Brands");
 require("./models/products");
 require("./models/order");
-
+require("./models/blog");
 app.use(require("./routes"));
 
 /// catch 404 and forward to error handler

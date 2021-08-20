@@ -1,13 +1,10 @@
 var router = require("express").Router();
 var ORDER = require("../../models/order");
-var helper = require("./helper");
 var orderService = require("./service/orderServ");
 
 router.post("/createOrder", async (req, res) => {
   try {
-    orderService.SendMailtoCustomer();
-
-    return;
+    // orderService.SendMailtoCustomer();
     const order = new ORDER();
     const newOrder = req.body;
     order.first_Name = newOrder.first_Name;
@@ -21,29 +18,43 @@ router.post("/createOrder", async (req, res) => {
     order.Address = newOrder.Address;
     order.totalAmount = newOrder.totalAmount;
     order.products = newOrder.products;
-
     const saved_Order = await order.save();
-    saved_Order.tracking_Status.placed.date = new Date();
-    saved_Order.tracking_Status.placed.status = "completed";
-    saved_Order.tracking_Status.placed.comment = "Order Placed";
-    saved_Order.tracking_Status.current_Status = "Processing";
-    const updated_order = await saved_Order.save();
-    return res.status(200).send(updated_order);
+    // saved_Order.tracking_Status.placed.date = new Date();
+    // saved_Order.tracking_Status.placed.status = "completed";
+    // saved_Order.tracking_Status.placed.comment = "Order Placed";
+    // saved_Order.tracking_Status.current_Status = "Processing";
+    // const updated_order = await saved_Order.save();
+    return res.status(200).send(saved_Order);
+  } catch (err) {
+    console.log(err, "err");
+    return res.status(400).send(err);
+  }
+});
+
+router.get("/getOrderbyId/:Id", async (req, res) => {
+  try {
+    const is_order = await ORDER.findById(req.params.Id);
+    if (!is_order) return res.status(400).send("Order not found");
+    return res.status(200).send(is_order);
+  } catch (err) {
+    return res.status(200).send(err);
+  }
+});
+
+router.get("/getOrders", async (req, res) => {
+  try {
+    const is_order = await ORDER.find();
+    if (!is_order) return res.status(400).send("Order not found");
+    return res.status(200).send(is_order);
   } catch (err) {
     return res.status(400).send(err);
   }
 });
 
-router.get("/getOrderDetails/:Id", async (req, res) => {
-  const is_order = await ORDER.findById(req.params.Id);
-  if (!is_order) return res.status(400).send("Order not found");
-  return res.status(200).send(is_order);
-});
-
-router.put("/UpdateOrderDetails/:Id", async (req, res) => {
-  const is_order = await ORDER.findById(req.params.Id);
-  if (!is_order) return res.status(400).send("Order not found");
-  return res.status(200).send(is_order);
-});
+// router.put("/UpdateOrderDetails/:Id", async (req, res) => {
+//   const is_order = await ORDER.findById(req.params.Id);
+//   if (!is_order) return res.status(400).send("Order not found");
+//   return res.status(200).send(is_order);
+// });
 
 module.exports = router;
