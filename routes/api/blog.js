@@ -4,6 +4,7 @@ var auth = require("../auth");
 var multer = require("multer");
 var Blog = require("../../models/blog");
 var path = require("path");
+const fs = require("fs-extra");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -21,13 +22,29 @@ var upload = multer({ storage: storage });
 
 router.post("/createBlog", upload.single("blogImg"), async (req, res) => {
   try {
-    const file = req.file;
+    let base64 = req.body.file.split(";base64,").pop();
+    console.log(base64);
+    let fileName = Date.now();
+    let path = `public/uploads/` + fileName;
+    fs.writeFile(
+      path,
+      base64,
+      {
+        encoding: "base64",
+      },
+      function (err, data) {
+        if (err) {
+          console.log(err, "err file uploading");
+        }
+      }
+    );
+
     const blog = new Blog();
     blog.slug = req.body.slug;
     blog.title = req.body.title;
     blog.description = req.body.description;
     blog.tags = req.body.tags;
-    blog.imgUrl = file.filename;
+    blog.imgUrl = fileName;
     const savedBlog = await blog.save();
     if (savedBlog) {
       return res.status(200).send(savedBlog);
