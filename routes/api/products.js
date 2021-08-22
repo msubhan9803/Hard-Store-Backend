@@ -5,6 +5,8 @@ var auth = require("../auth");
 var multer = require("multer");
 var product_Service = require("./service/productServ");
 
+var REVIEW = require("../../models/review");
+
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "public/uploads/products");
@@ -105,5 +107,85 @@ router.post("/productFilter", async (req, res) => {
     }
   ).select("title");
 });
+
+// Reviews
+router.post("/writeReview", async (req, res) => {
+  try {
+    const isProduct = await PRODUCT.findById(req.body.ProductId);
+    if (!isProduct) return res.status(400).send("Product not found");
+    const review = new REVIEW();
+    review.ProductId = req.body.ProductId;
+    review.Name = req.body.Name;
+    review.Title = req.body.Title;
+    review.Email = req.body.Email;
+    review.Comment = req.body.Comment;
+
+    const savedReview = await review.save();
+    if (savedReview) {
+      return res.status(200).send(savedReview);
+    }
+  } catch (err) {
+    console.log(err, "err");
+    return res.status(400).send(err);
+  }
+});
+
+router.get("/getReviews/:productId", async (req, res) => {
+  try {
+    const review = await REVIEW.find({ ProductId: req.params.productId });
+    if (!review) return res.status(200).send("Reviews not found");
+    return res.status(200).send(review);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+router.get("/getReviewById/:id", async (req, res) => {
+  try {
+    const review = await REVIEW.findById(req.params.id);
+    if (!review) return res.status(400).send("Review not found");
+    return res.status(200).send(review);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+router.delete("/deleteReview", async (req, res) => {
+  try {
+    REVIEW.deleteOne({ _id: { $eq: req.body.review_id } })
+      .then(async (resp) => {
+        if (resp) {
+          return res.status(400).send("Review Deleted");
+        }
+      })
+      .catch((err) => {
+        return res.status(400).send(err);
+      });
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+// router.post("/searchByTags", async (req, res) => {
+//   Blog.find(
+//     { tags: { $regex: req.body.query, $options: "i" } },
+//     function (err, blogs) {
+//       if (err) throw err;
+//       else if (blogs) {
+//         if (blogs != null && blogs != "") {
+//           return res.status(200).json({ result: blogs });
+//         } else {
+//           Blog.find(
+//             { title: { $regex: req.body.query, $options: "i" } },
+//             function (err, blogs) {
+//               if (err) throw err;
+//               return res.status(200).send(blogs);
+//             }
+//           );
+//         }
+//       }
+//     }
+//   );
+// });
 
 module.exports = router;

@@ -27,7 +27,7 @@ router.post("/createBlog", upload.single("blogImg"), async (req, res) => {
     blog.title = req.body.title;
     blog.description = req.body.description;
     blog.tags = req.body.tags;
-    blog.imgUrl = file.path;
+    blog.imgUrl = file.filename;
     const savedBlog = await blog.save();
     if (savedBlog) {
       return res.status(200).send(savedBlog);
@@ -96,6 +96,41 @@ router.post("/searchByTags", async (req, res) => {
       }
     }
   );
+});
+
+router.put("/UpdateBLogImg/:Id", upload.single("blogImg"), async (req, res) => {
+  try {
+    const file = req.file;
+    const isBlog = await Blog.findById(req.params.Id);
+    if (!isBlog) return res.status(400).send("Blog not found");
+    isBlog.imgUrl = file.filename;
+    const savedBlog = await isBlog.save();
+    if (savedBlog) {
+      return res.status(200).send(savedBlog);
+    }
+  } catch (err) {
+    console.log(err, "err");
+    return res.status(400).send(err);
+  }
+});
+
+router.put("/updateBlog/:Id", async (req, res) => {
+  try {
+    const isBlog = await Blog.findById(req.params.Id);
+    if (!isBlog) return res.status(400).send("Blog not found");
+    isBlog.title = req.body.title;
+    isBlog.tags = req.body.tags;
+    isBlog.description = req.body.description;
+    isBlog.slug = req.body.slug;
+
+    const savedBlog = await isBlog.save();
+    if (savedBlog) {
+      return res.status(200).send(savedBlog);
+    }
+  } catch (err) {
+    console.log(err, "err");
+    return res.status(400).send(err);
+  }
 });
 
 module.exports = router;

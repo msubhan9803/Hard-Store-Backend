@@ -38,6 +38,7 @@ app.use(require("morgan")("dev"));
 
 app.use(require("method-override")());
 app.use(express.static(path.join(__dirname, "public/products")));
+app.use(express.static(path.join(__dirname, "public/uploads")));
 
 app.use(cors());
 app.use(function (req, res, next) {
