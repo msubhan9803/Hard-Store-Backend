@@ -24,7 +24,7 @@ router.post("/createBlog", upload.single("blogImg"), async (req, res) => {
   try {
     let base64 = req.body.file.split(";base64,").pop();
     console.log(base64);
-    let fileName = Date.now();
+    let fileName = Date.now() + req.body.filename;
     let path = `public/uploads/` + fileName;
     fs.writeFile(
       path,

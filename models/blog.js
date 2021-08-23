@@ -3,8 +3,8 @@ var uniqueValidator = require("mongoose-unique-validator");
 
 var BlogSchema = new mongoose.Schema(
   {
-    slug: { type: String, unique: true },
-    title: { type: String, unique: true },
+    slug: { type: String },
+    title: { type: String },
     imgUrl: { type: String },
     tags: [],
     description: { type: String },
