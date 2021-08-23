@@ -120,7 +120,7 @@ router.put("/UpdateBLogImg/:Id", upload.single("blogImg"), async (req, res) => {
     const file = req.file;
     const isBlog = await Blog.findById(req.params.Id);
     if (!isBlog) return res.status(400).send("Blog not found");
-    isBlog.imgUrl = file.filename;
+    isBlog.imgUrl = req.filename;
     const savedBlog = await isBlog.save();
     if (savedBlog) {
       return res.status(200).send(savedBlog);
