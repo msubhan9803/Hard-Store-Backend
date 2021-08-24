@@ -23,8 +23,9 @@ var upload = multer({ storage: storage });
 router.post("/createBlog", upload.single("blogImg"), async (req, res) => {
   try {
     let base64 = req.body.file.split(";base64,").pop();
-    console.log(base64);
+
     let fileName = Date.now() + req.body.filename;
+
     let path = `public/uploads/` + fileName;
     fs.writeFile(
       path,
@@ -75,9 +76,9 @@ router.get("/getBlogById/:id", async (req, res) => {
   }
 });
 
-router.delete("/deleteBlog", async (req, res) => {
+router.delete("/deleteBlog/:Id", async (req, res) => {
   try {
-    Blog.deleteOne({ _id: { $eq: req.body.blog_id } })
+    Blog.deleteOne({ _id: { $eq: req.params.Id } })
       .then(async (resp) => {
         if (resp) {
           const blog = await Blog.find();
@@ -117,10 +118,27 @@ router.post("/searchByTags", async (req, res) => {
 
 router.put("/UpdateBLogImg/:Id", upload.single("blogImg"), async (req, res) => {
   try {
+    let base64 = req.body.file.split(";base64,").pop();
+
+    let fileName = Date.now() + req.body.fileName;
+
+    let path = `public/uploads/` + fileName;
+    fs.writeFile(
+      path,
+      base64,
+      {
+        encoding: "base64",
+      },
+      function (err, data) {
+        if (err) {
+          console.log(err, "err file uploading");
+        }
+      }
+    );
     const file = req.file;
     const isBlog = await Blog.findById(req.params.Id);
     if (!isBlog) return res.status(400).send("Blog not found");
-    isBlog.imgUrl = req.filename;
+    isBlog.imgUrl = fileName;
     const savedBlog = await isBlog.save();
     if (savedBlog) {
       return res.status(200).send(savedBlog);
