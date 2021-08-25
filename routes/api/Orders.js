@@ -109,6 +109,11 @@ router.put("/updateOrderStatus", async (req, res) => {
         isOrder.tracking_Status.Paid.status = "cancelled";
         isOrder.tracking_Status.Paid.comment = params.comment;
         isOrder.tracking_Status.current_Status = "Paid";
+      } else if (params.status == "") {
+        isOrder.tracking_Status.Paid.date = null;
+        isOrder.tracking_Status.Paid.status = "";
+        isOrder.tracking_Status.Paid.comment = "";
+        isOrder.tracking_Status.current_Status = "Paid";
       }
     }
 
