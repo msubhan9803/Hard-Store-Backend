@@ -78,6 +78,11 @@ router.put("/updateOrderStatus", async (req, res) => {
         isOrder.tracking_Status.ready_for_Delivery.comment = params.comment;
         isOrder.tracking_Status.ready_for_Delivery.status = "cancelled";
         isOrder.tracking_Status.current_Status = "ready_for_Delivery";
+      } else if (params.status == "") {
+        // isOrder.tracking_Status.Paid.date = new Date();
+        isOrder.tracking_Status.ready_for_Delivery.status = "inProgress";
+        isOrder.tracking_Status.ready_for_Delivery.comment = "";
+        isOrder.tracking_Status.current_Status = "ready_for_Delivery";
       }
     }
     //
@@ -96,6 +101,11 @@ router.put("/updateOrderStatus", async (req, res) => {
         isOrder.tracking_Status.out_For_Delivery.comment = params.comment;
         isOrder.tracking_Status.out_For_Delivery.status = "cancelled";
         isOrder.tracking_Status.current_Status = "out_For_Delivery";
+      } else if (params.status == "") {
+        // isOrder.tracking_Status.Paid.date = new Date();
+        isOrder.tracking_Status.out_For_Delivery.status = "inProgress";
+        isOrder.tracking_Status.out_For_Delivery.comment = "";
+        isOrder.tracking_Status.current_Status = "out_For_Delivery";
       }
     } else if (params.current_status == "Paid") {
       if (params.status == "completed") {
@@ -108,6 +118,11 @@ router.put("/updateOrderStatus", async (req, res) => {
         isOrder.tracking_Status.Paid.date = new Date();
         isOrder.tracking_Status.Paid.status = "cancelled";
         isOrder.tracking_Status.Paid.comment = params.comment;
+        isOrder.tracking_Status.current_Status = "Paid";
+      } else if (params.status == "") {
+        // isOrder.tracking_Status.Paid.date = new Date();
+        isOrder.tracking_Status.Paid.status = "inProgress";
+        isOrder.tracking_Status.Paid.comment = "";
         isOrder.tracking_Status.current_Status = "Paid";
       }
     }
