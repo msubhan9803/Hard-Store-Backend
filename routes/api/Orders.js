@@ -43,7 +43,7 @@ router.get("/getOrderbyId/:Id", async (req, res) => {
     if (!is_order) return res.status(400).send("Order not found");
     return res.status(200).send(is_order);
   } catch (err) {
-    return res.status(200).send(err);
+    return res.status(400).send(err);
   }
 });
 

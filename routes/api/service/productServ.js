@@ -14,7 +14,7 @@ const convertToImg = async (params) => {
           data.imagesPreview.map((img) => {
             let base64 = img.base64.split(";base64,").pop();
             let fileName = `${Date.now()}-${img.fileName}`;
-            let path = `public/products/` + fileName;
+            let path = `public/uploads/` + fileName;
             fs.writeFile(
               path,
               base64,

@@ -9,7 +9,7 @@ var REVIEW = require("../../models/review");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/uploads/products");
+    cb(null, "public/uploads/");
   },
   filename: function (req, file, cb) {
     cb(
