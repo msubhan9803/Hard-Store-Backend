@@ -166,6 +166,18 @@ router.delete("/deleteReview", async (req, res) => {
   }
 });
 
+router.put("/activeSale", async (req, res) => {
+  try {
+    const isProduct = await PRODUCT.findById(req.body.id);
+    if (!isProduct) return res.status(400).send("Product not found");
+    isProduct.sale = req.body.sale;
+    const updatedProduct = await isProduct.save();
+    return res.status(200).send(updatedProduct);
+  } catch (err) {
+    return re.status(400).send(err);
+  }
+});
+
 // router.post("/searchByTags", async (req, res) => {
 //   Blog.find(
 //     { tags: { $regex: req.body.query, $options: "i" } },
