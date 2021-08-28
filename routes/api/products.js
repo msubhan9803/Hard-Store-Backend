@@ -33,6 +33,7 @@ router.post("/addProduct", async (req, res) => {
     // (product.collections = req.body.collections),
     (product.sale = req.body.sale),
     (product.new = req.body.new),
+    (product.collections = req.body.collections),
     // (product.tags = req.body.tags),
     // (product.Watch_Case_Shape = req.body.Watch_Case_Shape),
     // (product.Watch_Case_Size = req.body.Watch_Case_Size),

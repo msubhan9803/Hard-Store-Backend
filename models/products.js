@@ -8,7 +8,7 @@ var productSchema = new mongoose.Schema(
     description: { type: String, lowercase: true, required: false },
     // category_id: { type: String, required: false },
     brand: { type: String, required: false },
-    // collections: [], //  new products, tranding , on sale
+    collections: [], //  new products, tranding , on sale
     sale: { type: Boolean, required: false, default: false },
     new: { type: Boolean, required: false },
     tags: [],
