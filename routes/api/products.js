@@ -110,6 +110,16 @@ router.post("/productFilter", async (req, res) => {
 });
 
 // Reviews
+router.get("/getReviews", async (req, res) => {
+  try {
+    const review = await REVIEW.find();
+    if (!review) return res.status(200).send("Reviews not found");
+    return res.status(200).send(review);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
 router.post("/writeReview", async (req, res) => {
   try {
     const isProduct = await PRODUCT.findById(req.body.ProductId);
@@ -119,6 +129,7 @@ router.post("/writeReview", async (req, res) => {
     review.Name = req.body.Name;
     review.Title = req.body.Title;
     review.Email = req.body.Email;
+    review.Rating = req.body.Rating;
     review.Comment = req.body.Comment;
 
     const savedReview = await review.save();
@@ -151,12 +162,12 @@ router.get("/getReviewById/:id", async (req, res) => {
   }
 });
 
-router.delete("/deleteReview", async (req, res) => {
+router.delete("/deleteReview/:id", async (req, res) => {
   try {
-    REVIEW.deleteOne({ _id: { $eq: req.body.review_id } })
+    REVIEW.deleteOne({ _id: { $eq: req.params.id } })
       .then(async (resp) => {
         if (resp) {
-          return res.status(400).send("Review Deleted");
+          return res.status(200).send("Review Deleted");
         }
       })
       .catch((err) => {

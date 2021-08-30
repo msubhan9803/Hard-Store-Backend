@@ -7,6 +7,7 @@ var ReviewSchema = new mongoose.Schema(
     Name: { type: String, unique: false },
     Title: { type: String, unique: false },
     Email: { type: String, unique: false },
+    Rating: { type: Number, unique: false },
     Comment: { type: String, unique: false },
   },
   { timestamps: true }
