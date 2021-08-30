@@ -7,7 +7,7 @@ const fs = require("fs-extra");
 const sendNotification = async () => {
   const htmlPath = path.join(
     __dirname,
-    "../../EmailTemplets/email-order-success.html"
+    "../../EmailTemplets/emailOrder.html"
   );
 
   fs.readFile(

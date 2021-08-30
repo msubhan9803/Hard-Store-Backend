@@ -22,7 +22,8 @@ var isProduction = process.env.NODE_ENV === "production";
 var app = express();
 
 app.use(cors());
-app.use(express.json({ extended: true, limit: "5MB" }));
+app.use(express.json({ limit: "50MB", extended: true }));
+app.use(express.urlencoded({ limit: "50mb" }));
 // app.use(express.bodyParser());
 
 // Normal express config defaults
