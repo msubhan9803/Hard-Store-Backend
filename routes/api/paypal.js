@@ -10,6 +10,34 @@ var SECRET =
   "EJZlQjRfRudOx8IZtbK-wvuATgkSfrpRkEhp6gbXcaUIxybWxsB6rhfQvoZHEEEvslR8eCxlh3nCDWTt";
 var PAYPAL_API = "https://api-m.sandbox.paypal.com";
 
+router.get("/requestAccessTokenPaypal", async (req, res) => {
+  var headers = {
+    Accept: "application/json",
+    "Accept-Language": "en_US",
+  };
+
+  var dataString = "grant_type=client_credentials";
+
+  var options = {
+    url: process.env.PAYPAL_TOKEN,
+    method: "POST",
+    headers: headers,
+    body: dataString,
+    auth: {
+      user: process.env.PAYPAL_CLIENT_ID,
+      pass: process.env.PAYPAL_SECRET,
+    },
+  };
+
+  function callback(error, response, body) {
+    if (!error && response.statusCode == 200) {
+      const jsonBody = JSON.parse(body);
+      return res.status(200).json(jsonBody);
+    }
+  }
+  request(options, callback);
+});
+
 router.post("/my-server/create-order", function (req, res) {
   request.post(
     process.env.PAYPAL_CREATE_ORDER,
