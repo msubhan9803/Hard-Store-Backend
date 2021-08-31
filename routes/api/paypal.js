@@ -10,6 +10,58 @@ var SECRET =
   "EJZlQjRfRudOx8IZtbK-wvuATgkSfrpRkEhp6gbXcaUIxybWxsB6rhfQvoZHEEEvslR8eCxlh3nCDWTt";
 var PAYPAL_API = "https://api-m.sandbox.paypal.com";
 
+router.post("/my-server/create-order", function (req, res) {
+  request.post(
+    process.env.PAYPAL_CREATE_ORDER,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${req.body.access_token}`,
+        "PayPal-Partner-Attribution-Id": "FLAVORsb-diayg6242989_MP",
+      },
+      body: {
+        intent: "CAPTURE",
+        purchase_units: req.body.purchase_units,
+      },
+      json: true,
+    },
+    function (err, response, body) {
+      if (err) {
+        console.error(err);
+        return res.sendStatus(500);
+      }
+      res.json({
+        id: body,
+      });
+    }
+  );
+});
+
+// router.post("/my-server/handle-approve/:id", function (req, res) {
+//   var OrderID = req.params.id;
+//   request.post(
+//     process.env.PAYPAL_HANDLE_APPROVE + OrderID + "/capture",
+//     {
+//       headers: {
+//         "Content-Type": "application/json",
+//         Authorization: `Bearer ${req.body.access_token}`,
+//         "PayPal-Partner-Attribution-Id": "FLAVORsb-diayg6242989_MP",
+//       },
+//     },
+//     function (err, response, body) {
+//       console.log(response);
+//       if (err) {
+//         console.error(err);
+//         return res.status(500).send(err);
+//       }
+//       const result = JSON.parse(body);
+//       res.json({
+//         result: result,
+//       });
+//     }
+//   );
+// });
+
 // Set up the payment:
 // 1. Set up a URL to handle requests from the PayPal button
 router.post("/my-api/create-payment/", function (req, res) {
