@@ -18,19 +18,18 @@ router.post("/createOrder", async (req, res) => {
     order.Address = newOrder.Address;
     order.totalAmount = newOrder.totalAmount;
     order.products = newOrder.products;
-    const saved_Order = await order.save();
-    saved_Order.tracking_Status.order_Confirmed.date = new Date();
-    saved_Order.tracking_Status.order_Confirmed.status = "completed";
-    saved_Order.tracking_Status.order_Confirmed.comment = "Order Placed";
-    saved_Order.tracking_Status.current_Status = "ready_for_Delivery";
-    saved_Order.tracking_Status.ready_for_Delivery.date = new Date();
-    saved_Order.tracking_Status.ready_for_Delivery.status = "inProgress";
-    saved_Order.tracking_Status.ready_for_Delivery.comment =
+    order.tracking_Status.order_Confirmed.date = new Date();
+    order.tracking_Status.order_Confirmed.status = "completed";
+    order.tracking_Status.order_Confirmed.comment = "Order Placed";
+    order.tracking_Status.current_Status = "ready_for_Delivery";
+    order.tracking_Status.ready_for_Delivery.date = new Date();
+    order.tracking_Status.ready_for_Delivery.status = "inProgress";
+    order.tracking_Status.ready_for_Delivery.comment =
       "your  order is under process";
-    helper.sendNotification();
-    const updated_order = await saved_Order.save();
+    const saved_Order = await order.save();
+    helper.sendNotification(saved_Order);
 
-    return res.status(200).send(updated_order);
+    return res.status(200).send(saved_Order);
   } catch (err) {
     console.log(err, "err");
     return res.status(400).send(err);

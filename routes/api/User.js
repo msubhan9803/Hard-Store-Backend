@@ -6,6 +6,8 @@ var path = require("path");
 var AUTH = require("../auth");
 var SUBSCRIBE = require("../../models/subscribe");
 const jwt = require("jsonwebtoken");
+var CURRENCY = require("../../models/currency");
+const currency = require("../../models/currency");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -99,6 +101,38 @@ router.post("/subscribe", async (req, res) => {
   subscribe.save().then((resp) => {
     return res.status(200).send("Subscribed");
   });
+});
+
+router.post("/addCurrency", async (req, res) => {
+  try {
+    const currency = new CURRENCY();
+    (currency.Dollar = 1), (currency.AED = req.body.AED);
+    const savedCurrency = await currency.save();
+    return res.status(200).send(savedCurrency);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+router.put("/updateCurrency", async (req, res) => {
+  try {
+    var _id = "612d218a94d0f838dc694b62";
+    const currency = await CURRENCY.findById(_id);
+    currency.AED = req.body.AED;
+    const conversionRate = currency.Dollar / currency.AED;
+    currency.conversionRate = conversionRate;
+
+    const savedCurrency = await currency.save();
+    return res.status(200).send(savedCurrency);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+router.get("/getCurrency", async (req, res) => {
+  var _id = "612d218a94d0f838dc694b62";
+  const isCurrency = await CURRENCY.findById(_id);
+  return res.status(200).send(isCurrency);
 });
 
 module.exports = router;
