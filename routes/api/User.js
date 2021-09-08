@@ -149,7 +149,7 @@ router.post("/contactUs", async (req, res) => {
   }
 });
 
-router.post("/getContactMessages", async (req, res) => {
+router.get("/getContactMessages", async (req, res) => {
   try {
     const getMessages = await CONTACT.find();
     return res.status(200).send(getMessages);
