@@ -7,7 +7,7 @@ var AUTH = require("../auth");
 var SUBSCRIBE = require("../../models/subscribe");
 const jwt = require("jsonwebtoken");
 var CURRENCY = require("../../models/currency");
-const currency = require("../../models/currency");
+const CONTACT = require("../../models/contactUs");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -133,6 +133,20 @@ router.get("/getCurrency", async (req, res) => {
   var _id = "612d218a94d0f838dc694b62";
   const isCurrency = await CURRENCY.findById(_id);
   return res.status(200).send(isCurrency);
+});
+
+router.post("/contactUs", async (req, res) => {
+  const contactUs = new CONTACT();
+  try {
+    contactUs.Name = req.body.Name;
+    contactUs.PhoneNumber = req.body.PhoneNumber;
+    contactUs.Email = req.body.Email;
+    contactUs.Message = req.body.Message;
+    const savedMessage = await contactUs.save();
+    return res.status(200).send("Thanks for contacting us");
+  } catch (err) {
+    return res.status(400).send(err);
+  }
 });
 
 module.exports = router;
