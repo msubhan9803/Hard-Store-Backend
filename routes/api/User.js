@@ -149,4 +149,13 @@ router.post("/contactUs", async (req, res) => {
   }
 });
 
+router.post("/getContactMessages", async (req, res) => {
+  try {
+    const getMessages = await CONTACT.find();
+    return res.status(200).send(getMessages);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
 module.exports = router;
