@@ -4,7 +4,7 @@ var PRODUCT = require("../../models/products");
 var auth = require("../auth");
 var multer = require("multer");
 var product_Service = require("./service/productServ");
-
+var FAQ = require("../../models/FAQ");
 var REVIEW = require("../../models/review");
 
 var storage = multer.diskStorage({
@@ -190,26 +190,71 @@ router.put("/activeSale", async (req, res) => {
   }
 });
 
-// router.post("/searchByTags", async (req, res) => {
-//   Blog.find(
-//     { tags: { $regex: req.body.query, $options: "i" } },
-//     function (err, blogs) {
-//       if (err) throw err;
-//       else if (blogs) {
-//         if (blogs != null && blogs != "") {
-//           return res.status(200).json({ result: blogs });
-//         } else {
-//           Blog.find(
-//             { title: { $regex: req.body.query, $options: "i" } },
-//             function (err, blogs) {
-//               if (err) throw err;
-//               return res.status(200).send(blogs);
-//             }
-//           );
-//         }
-//       }
-//     }
-//   );
-// });
+//// FAQ /////
+router.post("/submitFAQ", async (req, res) => {
+  try {
+    const faq = new FAQ();
+    (faq.type = req.body.type),
+      (faq.question = req.body.question),
+      (faq.answer = req.body.answer);
+    const savedFaq = await faq.save();
+    if (savedFaq) {
+      return res.status(200).send(savedFaq);
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send(err);
+  }
+});
+
+router.get("/getFaqs", async (req, res) => {
+  try {
+    const faq = await FAQ.find();
+    if (faq) {
+      return res.status(200).send(faq);
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send(err);
+  }
+});
+
+router.get("/getFaqsByType/:type", async (req, res) => {
+  try {
+    const faq = await FAQ.find({ type: req.params.type });
+    return res.status(200).send(faq);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send(err);
+  }
+});
+
+router.put("/updateFaqById", async (req, res) => {
+  try {
+    var faq = await FAQ.findById(req.body.id);
+    (faq.type = req.body.type),
+      (faq.question = req.body.question),
+      (faq.answer = req.body.answer);
+    const savedFaq = await faq.save();
+    if (savedFaq) {
+      return res.status(200).send(savedFaq);
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send(err);
+  }
+});
+
+router.delete("/deleteFaqById/:id", async (req, res) => {
+  try {
+    const faq = await FAQ.deleteOne({ _id: req.params.id });
+    if (faq) {
+      return res.status(200).send("FAQ Deleted");
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send(err);
+  }
+});
 
 module.exports = router;

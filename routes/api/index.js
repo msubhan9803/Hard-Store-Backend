@@ -5,7 +5,6 @@ router.use("/category", require("./Category"));
 router.use("/brand", require("./Brands"));
 router.use("/products", require("./products"));
 router.use("/order", require("./Orders"));
-router.use("/paypal", require("./paypal"));
 router.use("/blog", require("./blog"));
 
 router.use(function (err, req, res, next) {
