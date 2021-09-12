@@ -229,6 +229,17 @@ router.get("/getFaqsByType/:type", async (req, res) => {
   }
 });
 
+router.get("/searchFaq", async (req, res) => {
+  try {
+    const faq = await FAQ.find({ question: { $regex: req.query.question, $options: "i" } });
+    console.log("results: ", faq)
+    return res.status(200).send(faq);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send(err);
+  }
+});
+
 router.put("/updateFaqById", async (req, res) => {
   try {
     var faq = await FAQ.findById(req.body.id);
