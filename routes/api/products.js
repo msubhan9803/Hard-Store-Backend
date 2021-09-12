@@ -6,6 +6,9 @@ var multer = require("multer");
 var product_Service = require("./service/productServ");
 var FAQ = require("../../models/FAQ");
 var REVIEW = require("../../models/review");
+var path = require("path");
+const fs = require("fs-extra");
+const { Router } = require("express");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -25,29 +28,12 @@ router.post("/addProduct", async (req, res) => {
   const variants = await product_Service.convertToImg(req.body.variants);
 
   const product = new PRODUCT();
-  // (product.type = req.body.type),
   (product.title = req.body.title),
     (product.description = req.body.description),
-    // (product.category_id = req.body.category_id),
     (product.brand = req.body.brand),
-    // (product.collections = req.body.collections),
     (product.sale = req.body.sale),
     (product.new = req.body.new),
     (product.collections = req.body.collections),
-    // (product.tags = req.body.tags),
-    // (product.Watch_Case_Shape = req.body.Watch_Case_Shape),
-    // (product.Watch_Case_Size = req.body.Watch_Case_Size),
-    // (product.Glass = req.body.Glass),
-    // (product.Watch_Feature = req.body.Watch_Feature),
-    // (product.Model = req.body.Model),
-    // (product.Dial_Size = req.body.Dial_Size),
-    // (product.Dial_Size = req.body.Dial_Size),
-    // (product.Movement = req.body.Movement),
-    // (product.Watch_Movement_Country = req.body.Watch_Movement_Country),
-    // (product.Strap_Material = req.body.Strap_Material),
-    // (product.water_resistance = req.body.water_resistance),
-    // (product.Color_Family = req.body.Color_Family),
-    // (product.Warranty = req.body.Warranty);
     (product.variants = variants);
   product.skuArray = req.body.skuArray;
 
@@ -187,6 +173,46 @@ router.put("/activeSale", async (req, res) => {
     return res.status(200).send(updatedProduct);
   } catch (err) {
     return re.status(400).send(err);
+  }
+});
+
+router.delete("/deleteProductImg", async (req, res) => {
+  try {
+    const isProduct = await PRODUCT.findById(req.body.productId);
+    const imageName = isProduct.variants[0].imagesPreview[0];
+    let filepath = path.join(__dirname, `../../public/uploads/${imageName}`);
+    if (imageName != "") {
+      fs.unlinkSync(filepath);
+    }
+    return res.status(200).send("Image Deleted");
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+router.put("/UpdateProduct", async (req, res) => {
+  try {
+    const isProduct = await PRODUCT.findById(req.body.productId);
+    const imageName = isProduct.variants[0].imagesPreview[0];
+    let filepath = path.join(__dirname, `../../public/uploads/${imageName}`);
+    fs.unlinkSync(filepath);
+    const variants = await product_Service.convertToImg(req.body.variants);
+
+    (isProduct.title = req.body.title),
+      (isProduct.description = req.body.description),
+      (isProduct.brand = req.body.brand),
+      (isProduct.sale = req.body.sale),
+      (isProduct.new = req.body.new),
+      (isProduct.collections = req.body.collections),
+      (isProduct.variants = variants);
+    isProduct.skuArray = req.body.skuArray;
+
+    const savedProduct = await isProduct.save();
+    if (savedProduct) {
+      return res.status(200).send(savedProduct);
+    }
+  } catch (err) {
+    return res.status(400).send(err);
   }
 });
 
