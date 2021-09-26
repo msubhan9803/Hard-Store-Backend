@@ -216,6 +216,16 @@ router.put("/UpdateProduct", async (req, res) => {
   }
 });
 
+router.get("/getProductsName", async (req, res) => {
+  try {
+    const productName = await PRODUCT.find().select("title");
+    return res.status(200).send(productName);
+  } catch (err) {
+    console.log(err, "getProductsName");
+    return res.status(400).send(err);
+  }
+});
+
 //// FAQ /////
 router.post("/submitFAQ", async (req, res) => {
   try {

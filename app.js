@@ -73,7 +73,6 @@ if (isProduction) {
     useUnifiedTopology: true,
   });
 } else {
-  mongoose.connect("mongodb://localhost/conduit");
   mongoose.set("debug", true);
 }
 

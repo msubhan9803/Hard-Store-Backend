@@ -1,6 +1,7 @@
 var router = require("express").Router();
 var ORDER = require("../../models/order");
 var helper = require("./helper/helper");
+var moment = require("moment");
 
 router.post("/createOrder", async (req, res) => {
   try {
@@ -18,6 +19,7 @@ router.post("/createOrder", async (req, res) => {
     order.Address = newOrder.Address;
     order.totalAmount = newOrder.totalAmount;
     order.products = newOrder.products;
+    order.source = newOrder.source;
     order.tracking_Status.order_Confirmed.date = new Date();
     order.tracking_Status.order_Confirmed.status = "completed";
     order.tracking_Status.order_Confirmed.comment = "Order Placed";
@@ -133,10 +135,49 @@ router.put("/updateOrderStatus", async (req, res) => {
     return res.status(400).send(err);
   }
 });
-// router.put("/UpdateOrderDetails/:Id", async (req, res) => {
-//   const is_order = await ORDER.findById(req.params.Id);
-//   if (!is_order) return res.status(400).send("Order not found");
-//   return res.status(200).send(is_order);
-// });
+
+router.post("/filterOrders", async (req, res) => {
+  try {
+    let params = req.body;
+    let isOrder = "";
+
+    if (params.DAY == true) {
+      var currentDate = new Date();
+      var StartOfDay = moment(currentDate).startOf("day");
+      var EndOfDay = moment(StartOfDay).endOf("day");
+      console.log(StartOfDay, "StartOfDay");
+      console.log(EndOfDay, "EndOfDay");
+      isOrder = await ORDER.find({
+        createdAt: { $gte: StartOfDay, $lte: EndOfDay },
+      });
+    } else if (params.WEEK == true) {
+      var currentDate = new Date();
+      var dateTo = moment(currentDate).format("YYYY-MM-DD");
+      var dateFrom = moment(dateTo).subtract(7, "d").format("YYYY-MM-DD");
+      console.log(dateFrom, "dateFrom");
+      console.log(dateTo, "dateTo");
+      var DateFromEndOfDay = moment(dateFrom).endOf("day");
+      console.log(DateFromEndOfDay, "DateFromEndOfDay");
+      var EndOfDay = moment(dateTo).endOf("day");
+      console.log(EndOfDay);
+      isOrder = await ORDER.find({
+        createdAt: {
+          $gte: DateFromEndOfDay,
+          $lte: EndOfDay,
+        },
+      });
+    }
+
+    return res.status(200).json({ Orders: isOrder });
+  } catch (error) {
+    console.log(error, "Error filter order");
+    return res.status(400).json({ Error: error });
+  }
+
+  // if (params.day == 1) {
+
+  console.log(isOrder, "isOrder");
+  // }
+});
 
 module.exports = router;
