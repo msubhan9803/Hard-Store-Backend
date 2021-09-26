@@ -12,6 +12,8 @@ var orderSchema = new mongoose.Schema(
     State: { type: String, lowercase: true },
     postalCode: { type: String, lowercase: true },
     Address: { type: String, lowercase: true },
+    source: { type: String, lowercase: true },
+
     products: [
       {
         product_name: {

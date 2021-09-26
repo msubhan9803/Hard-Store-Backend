@@ -107,6 +107,9 @@ router.post("/addCurrency", async (req, res) => {
   try {
     const currency = new CURRENCY();
     (currency.Dollar = 1), (currency.AED = req.body.AED);
+    const conversionRate = currency.Dollar / currency.AED;
+    currency.conversionRate = conversionRate;
+
     const savedCurrency = await currency.save();
     return res.status(200).send(savedCurrency);
   } catch (err) {
@@ -116,8 +119,7 @@ router.post("/addCurrency", async (req, res) => {
 
 router.put("/updateCurrency", async (req, res) => {
   try {
-    var _id = "612d218a94d0f838dc694b62";
-    const currency = await CURRENCY.findById(_id);
+    const currency = await CURRENCY.findOne();
     currency.AED = req.body.AED;
     const conversionRate = currency.Dollar / currency.AED;
     currency.conversionRate = conversionRate;
@@ -130,8 +132,8 @@ router.put("/updateCurrency", async (req, res) => {
 });
 
 router.get("/getCurrency", async (req, res) => {
-  var _id = "612d218a94d0f838dc694b62";
-  const isCurrency = await CURRENCY.findById(_id);
+  const isCurrency = await CURRENCY.findOne();
+  console.log(isCurrency, "isCurrency");
   return res.status(200).send(isCurrency);
 });
 
