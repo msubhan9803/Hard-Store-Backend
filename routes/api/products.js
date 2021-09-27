@@ -226,6 +226,35 @@ router.get("/getProductsName", async (req, res) => {
   }
 });
 
+router.get("/averageRating/:ProductId", async (req, res) => {
+  try {
+    const starAvg = await REVIEW.aggregate([
+      {
+        $match: {
+          ProductId: { $eq: req.params.ProductId },
+        },
+      },
+      {
+        $group: {
+          _id: req.params.ProductId,
+          AverageValue: { $avg: "$Rating" },
+        },
+      },
+    ]).exec();
+
+    const totalReviews = await REVIEW.find({
+      ProductId: req.params.ProductId,
+    }).countDocuments();
+
+    return res
+      .status(200)
+      .json({ totalReviews: totalReviews, starAvg: starAvg[0].AverageValue });
+  } catch (err) {
+    console.log(err, "averageRating");
+    return res.status(400).send(err);
+  }
+});
+
 //// FAQ /////
 router.post("/submitFAQ", async (req, res) => {
   try {
