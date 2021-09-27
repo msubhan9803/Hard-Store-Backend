@@ -40,6 +40,14 @@ var orderSchema = new mongoose.Schema(
           type: Number,
           require: true,
         },
+        sale: {
+          type: Boolean,
+          require: true,
+        },
+        sub_Total: {
+          type: Number,
+          require: true,
+        },
       },
     ],
 
