@@ -536,8 +536,77 @@ router.get("/salesBySource", async (req, res) => {
         $gte: startOfDay,
         $lt: endOfDay,
       },
-    }).countDocuments();
-    console.log(Total_Orders, "Total_Orders");
+    });
+
+    const Total_Orders_length = Total_Orders.length;
+    // console.log(Total_Orders_length, "Total_Orders_length");
+    var web_count = 0;
+    var fb_count = 0;
+    var whatsApp_count = 0;
+    var instagram_count = 0;
+
+    var web_count_amount = 0;
+    var fb_count_amount = 0;
+    var whatsApp_count_amount = 0;
+    var instagram_count_amount = 0;
+    var Total_Orders_amount = 0;
+    Total_Orders.forEach((x) => {
+      Total_Orders_amount = Total_Orders_amount + x.totalAmount;
+      if (x.source == "web") {
+        web_count = web_count + 1;
+        web_count_amount = web_count_amount + x.totalAmount;
+      } else if (x.source == "Facebook") {
+        fb_count = fb_count + 1;
+        fb_count_amount = fb_count_amount + x.totalAmount;
+      } else if (x.source == "Instagram") {
+        instagram_count = instagram_count + 1;
+        instagram_count_amount = instagram_count_amount + x.totalAmount;
+      } else if (x.source == "Whatsapp") {
+        whatsApp_count = whatsApp_count = 1;
+        whatsApp_count_amount = whatsApp_count_amount + x.totalAmount;
+      }
+    });
+
+    console.log(Total_Orders_length, "Total_Orders");
+    console.log(web_count, "web_count");
+    console.log(fb_count, "fb_count");
+    console.log(whatsApp_count, "whatsApp_count");
+    console.log(instagram_count, "instagram_count");
+    console.log(Total_Orders_length, "Total_Orders");
+    console.log(web_count_amount, "web_count");
+    console.log(fb_count_amount, "fb_count");
+    console.log(whatsApp_count_amount, "whatsApp_count");
+    console.log(instagram_count_amount, "instagram_count");
+
+    const result = {
+      Total_Orders_length: Total_Orders_length,
+      Total_Orders_amount: Total_Orders_amount,
+      web_count: web_count,
+      fb_count: fb_count,
+      whatsApp_count: whatsApp_count,
+      instagram_count: whatsApp_count,
+      web_count_amount: web_count_amount,
+      fb_count_amount: fb_count_amount,
+      whatsApp_count_amount: whatsApp_count_amount,
+      instagram_count_amount: instagram_count_amount,
+    };
+
+    return res.status(200).send(result);
+  } catch (err) {
+    console.log.log(err, "err");
+    return res.status(400).send(err);
+  }
+});
+
+router.get("/getLatestOrders", async (req, res) => {
+  try {
+    const latest_5_orders = await Orders.find().limit(5).sort({ $natural: -1 });
+
+    const result = {
+      latest_5_orders: latest_5_orders,
+    };
+
+    return res.status(200).send(result);
   } catch (err) {
     console.log.log(err, "err");
     return res.status(400).send(err);
