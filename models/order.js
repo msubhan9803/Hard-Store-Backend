@@ -120,6 +120,50 @@ var orderSchema = new mongoose.Schema(
         },
       },
     },
+
+    // orderDetail : {
+    //   create_time : {
+    //     type:Date
+    //   },
+    //   id:{
+    //     type:String
+    //   },
+    //   intent:{
+    //     type:{
+    //       type:String
+    //     }
+    //   },
+    //   links :  [{
+    //     href : {
+    //       type:String
+    //     }
+    //   }],
+
+    //   payer:{
+    //     address :{
+    //       country_code:{
+    //         type:String
+    //       }
+    //     },
+    //     email_address: {
+    //       type:String
+    //     },
+
+    //     name:{
+    //       given_name :{
+    //         type:String
+    //       },
+    //       surname:{
+    //         type:surname
+    //       }
+    //     },
+    //     payer_id : {
+    //       type:String
+    //     }
+
+    //   }
+
+    // }
   },
   { timestamps: true }
 );

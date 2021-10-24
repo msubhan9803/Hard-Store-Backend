@@ -7,6 +7,7 @@ const fs = require("fs-extra");
 const sendNotification = async (params) => {
   const htmlPath = path.join(__dirname, "../../EmailTemplets/emailOrder.html");
 
+  const CC_User = ["ahsan@mailinator.com"];
   fs.readFile(
     htmlPath,
     {
@@ -36,6 +37,7 @@ const sendNotification = async (params) => {
         var mailOptions = {
           from: process.env.AUTH_USER,
           to: params.Email,
+          cc: CC_User,
           subject: "Order Confirmation",
           text: "",
           html: htmlToSend,
@@ -50,32 +52,6 @@ const sendNotification = async (params) => {
       }
     }
   );
-
-  //   var transporter = nodemailer.createTransport({
-  //     host: process.env.SMTP_HOST,
-  //     port: process.env.G_PORT,
-  //     secure: true, // use SSL
-  //     auth: {
-  //       user: process.env.AUTH_USER,
-  //       pass: process.env.AUTH_PASS,
-  //     },
-  //   });
-
-  //   var mailOptions = {
-  //     from: process.env.AUTH_USER,
-  //     to: "ahsanzulfiqar77@gmail.com",
-  //     subject: "TEST mAIL ",
-  //     text: "CHECKING TEST mAIL",
-  //     html: "<p> All saves  </p>",
-  //   };
-
-  //   transporter.sendMail(mailOptions, function (error, info) {
-  //     if (error) {
-  //       console.log(error);
-  //     } else {
-  //       console.log("Email sent: " + info.response);
-  //     }
-  //   });
 };
 
 module.exports = { sendNotification };

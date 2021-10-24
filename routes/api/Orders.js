@@ -2,9 +2,11 @@ var router = require("express").Router();
 var ORDER = require("../../models/order");
 var helper = require("./helper/helper");
 var moment = require("moment");
+var Product = require("../../models/products");
 
 router.post("/createOrder", async (req, res) => {
   try {
+    console.log(req.body, " Order  body");
     // orderService.SendMailtoCustomer();
     const order = new ORDER();
     const newOrder = req.body;
@@ -20,6 +22,7 @@ router.post("/createOrder", async (req, res) => {
     order.totalAmount = newOrder.totalAmount;
     order.products = newOrder.products;
     order.source = newOrder.source;
+    order.paymentStatus = true;
     order.tracking_Status.order_Confirmed.date = new Date();
     order.tracking_Status.order_Confirmed.status = "completed";
     order.tracking_Status.order_Confirmed.comment = "Order Placed";
@@ -27,11 +30,26 @@ router.post("/createOrder", async (req, res) => {
     order.tracking_Status.ready_for_Delivery.date = new Date();
     order.tracking_Status.ready_for_Delivery.status = "inProgress";
     order.tracking_Status.ready_for_Delivery.comment =
-      "your  order is under process";
-    const saved_Order = await order.save();
-    helper.sendNotification(saved_Order);
+      "your order is under process";
 
-    return res.status(200).send(saved_Order);
+    if (req.body.paymentStatus == true) {
+      order.tracking_Status.Paid.date = new Date();
+      order.tracking_Status.Paid.status = "completed";
+    }
+
+    const saved_Order = await order.save();
+    if (saved_Order != "") {
+      await helper.sendNotification(saved_Order);
+
+      saved_Order.products.map(async (x) => {
+        const is_product = await Product.findById(x.product_Id);
+        is_product.skuArray[0].stock =
+          is_product.skuArray[0].stock - x.quantity;
+        is_product.save();
+      });
+
+      return res.status(200).send(saved_Order);
+    }
   } catch (err) {
     console.log(err, "err");
     return res.status(400).send(err);
@@ -50,7 +68,7 @@ router.get("/getOrderbyId/:Id", async (req, res) => {
 
 router.get("/getOrders", async (req, res) => {
   try {
-    const is_order = await ORDER.find();
+    const is_order = await ORDER.find().sort({ $natural: -1 });
     if (!is_order) return res.status(400).send("Order not found");
     return res.status(200).send(is_order);
   } catch (err) {

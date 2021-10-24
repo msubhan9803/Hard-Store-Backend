@@ -49,7 +49,7 @@ var productSchema = new mongoose.Schema(
         watchStrapColor: { type: String },
         price: { type: String },
         specialPrice: { type: String },
-        stock: { type: String },
+        stock: { type: Number },
         sellerSku: { type: String },
       },
     ],

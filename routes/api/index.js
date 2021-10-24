@@ -6,6 +6,7 @@ router.use("/brand", require("./Brands"));
 router.use("/products", require("./products"));
 router.use("/order", require("./Orders"));
 router.use("/blog", require("./blog"));
+router.use("/dashboard", require("./dashboard"));
 
 router.use(function (err, req, res, next) {
   if (err.name === "ValidationError") {
